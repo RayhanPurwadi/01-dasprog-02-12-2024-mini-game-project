@@ -3,9 +3,14 @@
 
 #include <string.h>
 #include <ncursesw/curses.h>
+#include <wchar.h>
+#include <unistd.h>
+#include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
 
-// 4 chars
-#define PLAYER_HEIGHT 4
+// 5 chars
+#define PLAYER_HEIGHT 5
 #define MAX_CONSOLE_WIDTH 50
 
 typedef enum { VIEW_MENU, VIEW_GAME, VIEW_SETTINGS } VIEW;
@@ -19,6 +24,7 @@ typedef struct gamestate_t {
     VIEW view;
     DIFFICULTY difficulty;
     int isQuitting;
+    int clear;
     unsigned short score[2];
     struct win {
         unsigned int x;

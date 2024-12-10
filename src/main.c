@@ -1,11 +1,13 @@
 #include <stdlib.h>
 #include <ncursesw/curses.h>
 #include <signal.h>
+#include <locale.h>
 
 #include "utils.h"
 #include "game.h"
 
 int main() {
+    setlocale(LC_ALL, "");
     initscr();
     register_grace_shutdowns();
     
@@ -15,7 +17,7 @@ int main() {
     clear();
     refresh();
 
-    gamestate_t game = { VIEW_MENU, DIFFICULTY_EASY, 0, { 0, 0 } };
+    gamestate_t game = { VIEW_MENU, DIFFICULTY_EASY, 0, 1, { 0, 0 } };
     getmaxyx(stdscr, game.win.y, game.win.x);
 
     while (!game.isQuitting) {

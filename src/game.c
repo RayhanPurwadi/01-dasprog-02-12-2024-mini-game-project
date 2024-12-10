@@ -38,10 +38,6 @@ void render_menu(gamestate_t *game) {
     }
 }
 
-void render_game(gamestate_t *game) {
-
-}
-
 void render_settings(gamestate_t *game) {
     int x, y;
     char text[][MAX_CONSOLE_WIDTH] = {
@@ -72,4 +68,67 @@ void render_settings(gamestate_t *game) {
         else if (ch == '3') { game->difficulty = DIFFICULTY_HARD; break; }
         else if (ch == '0') { break; }
     }
+}
+
+
+void render_game(gamestate_t *game) {
+    // init
+    halfdelay(1);
+
+    // game
+    int x, y;
+    char tmp[50] = {0};
+    struct { int x; int y; } ball = { game->win.x/2, game->win.y/2 };
+#define FULL_BLOCK "|"
+
+    while (game->score[0] < 7 && game->score[1] < 7) {
+        if (game->clear) { clear(); game->clear = 0; }
+        
+        // Render static text
+        x = calculate_x_text_center(game, strlen("GAME ON"));
+        y = 1;
+        make_text(x, y, "GAME ON");
+
+        
+        strcpy(tmp, "ENEMY");
+        x = calculate_x_text_center(game, strlen(tmp))/2;
+        y = game->win.y-1;
+        make_text(x, y, tmp);
+
+        strcpy(tmp, "PLAYER");
+        x = calculate_x_text_center(game, strlen(tmp));
+        x += x/2;
+        y = game->win.y-1;
+        make_text(x, y, tmp);
+
+        // Render scores
+        sprintf(tmp, "Score: %d", game->score[0]);
+        x = calculate_x_text_center(game, strlen(tmp))/2;
+        y = 1;
+        make_text(x, y, tmp);
+
+        sprintf(tmp, "Score: %d", game->score[1]);
+        x = calculate_x_text_center(game, strlen(tmp));
+        x += x/2;
+        y = 1;
+        make_text(x, y, tmp);
+
+        // Render players
+        x = game->win.x-2;
+        y = game->win.y/2 - PLAYER_HEIGHT/2;
+
+        for (int i = 0; i < PLAYER_HEIGHT; i++) {
+            // Enemy
+            make_text(1, y + i, FULL_BLOCK);
+            // Player
+            make_text(x, y + i, FULL_BLOCK);
+        }
+
+        refresh();
+    }
+
+#undef FULL_BLOCK
+    // TODO: Render winning screen
+    
+    nocbreak();
 }
