@@ -12,13 +12,14 @@ int main() {
     noecho();
     cbreak();
 
-    wclear(stdscr);
+    clear();
     refresh();
 
     gamestate_t game = { VIEW_MENU, DIFFICULTY_EASY, 0, { 0, 0 } };
     getmaxyx(stdscr, game.win.y, game.win.x);
 
     while (!game.isQuitting) {
+        clear();
         switch (game.view) {
             case VIEW_MENU:
                 render_menu(&game);
