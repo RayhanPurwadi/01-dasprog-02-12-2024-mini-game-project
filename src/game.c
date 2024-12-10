@@ -28,6 +28,14 @@ void render_menu(gamestate_t *game) {
         y = ypos[i];
         make_text(x, y, text[i]);
     }
+
+    // Register events
+    while (1) {
+        char ch = getch();
+        if (ch == '1') { game->view = VIEW_GAME; break; }
+        else if (ch == '2') { game->view = VIEW_SETTINGS; break; }
+        else if (ch == '3') { game->isQuitting = true; break; }
+    }
 }
 
 void render_game(gamestate_t *game) {

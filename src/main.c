@@ -33,5 +33,7 @@ int main() {
         refresh();
     }
 
+    grace_shutdown(0);
+
     return 0;
 }
