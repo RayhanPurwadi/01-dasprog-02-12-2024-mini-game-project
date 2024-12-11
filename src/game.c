@@ -195,7 +195,7 @@ void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const 
 }
 
 void we_play(gamestate_t *game, vector2_t *ball, player_t players[2]) {
-    int delta = players[0].y - ball->y;
+    int delta = (players[0].y - ball->y) + PLAYER_HEIGHT/2;
     
     players[0].y += delta > 0 ? -1 : 1;
 }
