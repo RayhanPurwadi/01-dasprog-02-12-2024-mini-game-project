@@ -15,10 +15,9 @@
 #include "utils.h"
 
 // 5 chars
-#define PLAYER_HEIGHT 5
+#define PLAYER_HEIGHT 3
 #define MAX_CONSOLE_WIDTH 50
 #define BALL_SPEED 30
-#define ENEMY_MOVEMENT_RATE 0.5f
 
 typedef enum { VIEW_MENU, VIEW_GAME, VIEW_SETTINGS } VIEW;
 typedef enum { DIFFICULTY_EASY, DIFFICULTY_NORMAL, DIFFICULTY_HARD } DIFFICULTY;
