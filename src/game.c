@@ -161,9 +161,27 @@ void render_game(gamestate_t *game) {
     }
 
 #undef FULL_BLOCK
-    // TODO: Render winning screen
-    
+    clear();
+
+    strcpy(tmp, game->score[1] == 7 ? "YOU WON!" : "YOU LOSE!");
+    x = calculate_x_text_center(game, strlen(tmp));
+    y = game->win.y/2-2;
+    make_text(x, y, tmp);
+
+    sprintf(tmp, "%d vs %d", game->score[0], game->score[1]);
+    x = calculate_x_text_center(game, strlen(tmp));
+    y = game->win.y/2-1;
+    make_text(x, y, tmp);
+
+    strcpy(tmp, "Press any key to return to menu");
+    x = calculate_x_text_center(game, strlen(tmp));
+    y = game->win.y/2+1;
+    make_text(x, y, tmp);
+
+    refresh();
     timeout(-1);
+    game->view = VIEW_MENU;
+    getch();
 }
 
 vector2_t vAdd(vector2_t const a, vector2_t const b) {
