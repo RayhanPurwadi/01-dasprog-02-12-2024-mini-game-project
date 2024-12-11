@@ -180,8 +180,11 @@ void render_game(gamestate_t *game) {
 
     refresh();
     timeout(-1);
-    game->view = VIEW_MENU;
     getch();
+
+    game->view = VIEW_MENU;
+    game->score[0] = 0;
+    game->score[1] = 0;
 }
 
 vector2_t vAdd(vector2_t const a, vector2_t const b) {
