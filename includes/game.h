@@ -45,5 +45,6 @@ void render_game(gamestate_t *game);
 void render_settings(gamestate_t *game);
 
 void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const players[2]);
+void we_play(gamestate_t *game, vector2_t *ball, player_t players[2]);
 
 #endif

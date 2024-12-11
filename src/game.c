@@ -129,6 +129,7 @@ void render_game(gamestate_t *game) {
         // Render players
         x = game->win.x-2;
 
+        we_play(game, &ball, players);
         for (int i = 0; i < PLAYER_HEIGHT; i++) {
             // Enemy
             make_text(1, players[0].y + i, FULL_BLOCK);
@@ -182,10 +183,15 @@ void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const 
         dir->x = rand() % 2 == 0 ? 1 : -1;
         dir->y = rand() % 2 == 0 ? 1 : -1;
     } else if (
-        (players[0].y <= ball->y && players[0].y + PLAYER_HEIGHT >= ball->y && ball->x == 1+1) ||
+        (players[0].y <= ball->y && players[0].y + PLAYER_HEIGHT >= ball->y && ball->x == 1+2) ||
         (players[1].y <= ball->y && players[1].y + PLAYER_HEIGHT >= ball->y && ball->x == game->win.x-2-1)
     ) {
         dir->x = -dir->x;
         dir->y = -dir->y;
     }
+}
+
+void we_play(gamestate_t *game, vector2_t *ball, player_t players[2]) {
+    int randomSign = rand() % 2 == 0 ? -2 : 2;
+    players[0].y = ball->y + randomSign*(int)((rand() % game->win.y * (1/(game->difficulty)))) - PLAYER_HEIGHT/2;
 }
