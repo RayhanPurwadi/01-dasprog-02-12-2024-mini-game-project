@@ -129,7 +129,7 @@ void render_game(gamestate_t *game) {
         // Render players
         x = game->win.x-2;
 
-        if (rand() % 5 - game->difficulty+1 <= 1)
+        if (rand() % 50 - (game->difficulty+1)*10 <= 20 && ball.x <= game->win.x/(3-game->difficulty))
             for (int i = 0; i < game->difficulty+1; i++)
                 we_play(game, &ball, players); // TODO: Smooth out the drawing.
 
