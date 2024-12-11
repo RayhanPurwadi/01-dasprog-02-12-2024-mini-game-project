@@ -13,3 +13,10 @@ void register_grace_shutdowns() {
     signal(SIGSEGV, grace_shutdown);
     signal(SIGTERM, grace_shutdown);
 }
+
+long long timeInMilliseconds() {
+    struct timeval tv;
+
+    gettimeofday(&tv,NULL);
+    return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
+}

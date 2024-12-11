@@ -78,6 +78,7 @@ void render_game(gamestate_t *game) {
     // game
     int x, y;
     char tmp[50] = {0};
+    long long lastBallUpdate = timeInMilliseconds();
     vector2_t ball = { game->win.x/2, game->win.y/2 };
     vector2_t balldir = { 0, 0 };
     player_t players[2] = {
@@ -92,6 +93,7 @@ void render_game(gamestate_t *game) {
 #define FULL_BLOCK "|"
 
     while (game->score[0] < 7 && game->score[1] < 7) {
+        long long updateTime = timeInMilliseconds();
         clear();
 
         // Render static text
@@ -112,8 +114,8 @@ void render_game(gamestate_t *game) {
         make_text(x, y, tmp);
 
         // Render scores
-        // sprintf(tmp, "Score: %d", game->score[0]);
-        sprintf(tmp, "Score: %d %d", ball.x, ball.y);
+        sprintf(tmp, "Score: %d", game->score[0]);
+        // sprintf(tmp, "Score: %lld", );
         x = calculate_x_text_center(game, strlen(tmp))/2;
         y = 1;
         make_text(x, y, tmp);
@@ -134,10 +136,14 @@ void render_game(gamestate_t *game) {
             make_text(x, players[1].y + i, FULL_BLOCK);
         }
 
-        // Render ball
-        we_ball(game, &ball, &balldir, players);
-        ball.x += balldir.x;
-        ball.y += balldir.y;
+        // Update ball
+        if (updateTime - lastBallUpdate >= 1000/BALL_SPEED) {
+            we_ball(game, &ball, &balldir, players);
+            ball.x += balldir.x;
+            ball.y += balldir.y;
+            lastBallUpdate = updateTime;
+        }
+        // Draw ball
         make_text(ball.x, ball.y, "O");
 
         refresh();
@@ -176,8 +182,8 @@ void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const 
         dir->x = rand() % 2 == 0 ? 1 : -1;
         dir->y = rand() % 2 == 0 ? 1 : -1;
     } else if (
-        (players[0].y <= ball->y && players[0].y >= ball->y && ball->x == 1) ||
-        (players[1].y <= ball->y && players[1].y >= ball->y && ball->x == game->win.x-2)
+        (players[0].y <= ball->y && players[0].y + PLAYER_HEIGHT >= ball->y && ball->x == 1+1) ||
+        (players[1].y <= ball->y && players[1].y + PLAYER_HEIGHT >= ball->y && ball->x == game->win.x-2-1)
     ) {
         dir->x = -dir->x;
         dir->y = -dir->y;

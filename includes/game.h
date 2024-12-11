@@ -11,9 +11,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "utils.h"
+
 // 5 chars
 #define PLAYER_HEIGHT 5
 #define MAX_CONSOLE_WIDTH 50
+#define BALL_SPEED 7
 
 typedef enum { VIEW_MENU, VIEW_GAME, VIEW_SETTINGS } VIEW;
 typedef enum { DIFFICULTY_EASY, DIFFICULTY_NORMAL, DIFFICULTY_HARD } DIFFICULTY;
