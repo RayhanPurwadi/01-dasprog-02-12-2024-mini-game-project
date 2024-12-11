@@ -189,8 +189,9 @@ void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const 
         (players[0].y <= ball->y && players[0].y + PLAYER_HEIGHT >= ball->y && ball->x <= 1+2) ||
         (players[1].y <= ball->y && players[1].y + PLAYER_HEIGHT >= ball->y && ball->x >= game->win.x-2-1)
     ) {
+        int randomSign = rand() % 2 == 0 ? 1 : -1;
         dir->x = -dir->x;
-        dir->y = -dir->y;
+        dir->y = dir->y * randomSign;
     }
 }
 
