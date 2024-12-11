@@ -73,17 +73,27 @@ void render_settings(gamestate_t *game) {
 
 void render_game(gamestate_t *game) {
     // init
-    halfdelay(1);
+    timeout(100);
 
     // game
     int x, y;
     char tmp[50] = {0};
-    struct { int x; int y; } ball = { game->win.x/2, game->win.y/2 };
+    vector2_t ball = { game->win.x/2, game->win.y/2 };
+    vector2_t balldir = { 0, 0 };
+    player_t players[2] = {
+        { game->win.y/2 - PLAYER_HEIGHT/2 },
+        { game->win.y/2 - PLAYER_HEIGHT/2 }
+    };
+
+    srand(time(0));
+    balldir.x = rand() % 2 == 0 ? 1 : -1;
+    balldir.y = rand() % 2 == 0 ? 1 : -1;
+
 #define FULL_BLOCK "|"
 
     while (game->score[0] < 7 && game->score[1] < 7) {
-        if (game->clear) { clear(); game->clear = 0; }
-        
+        clear();
+
         // Render static text
         x = calculate_x_text_center(game, strlen("GAME ON"));
         y = 1;
@@ -102,7 +112,8 @@ void render_game(gamestate_t *game) {
         make_text(x, y, tmp);
 
         // Render scores
-        sprintf(tmp, "Score: %d", game->score[0]);
+        // sprintf(tmp, "Score: %d", game->score[0]);
+        sprintf(tmp, "Score: %d %d", ball.x, ball.y);
         x = calculate_x_text_center(game, strlen(tmp))/2;
         y = 1;
         make_text(x, y, tmp);
@@ -115,20 +126,60 @@ void render_game(gamestate_t *game) {
 
         // Render players
         x = game->win.x-2;
-        y = game->win.y/2 - PLAYER_HEIGHT/2;
 
         for (int i = 0; i < PLAYER_HEIGHT; i++) {
             // Enemy
-            make_text(1, y + i, FULL_BLOCK);
+            make_text(1, players[0].y + i, FULL_BLOCK);
             // Player
-            make_text(x, y + i, FULL_BLOCK);
+            make_text(x, players[1].y + i, FULL_BLOCK);
         }
 
+        // Render ball
+        we_ball(game, &ball, &balldir, players);
+        ball.x += balldir.x;
+        ball.y += balldir.y;
+        make_text(ball.x, ball.y, "O");
+
         refresh();
+
+        int ch = getch();
+        if (ch == KEY_UP) {
+            players[1].y--;
+        } else if (ch == KEY_DOWN) {
+            players[1].y++;
+        }
     }
 
 #undef FULL_BLOCK
     // TODO: Render winning screen
     
-    nocbreak();
+    timeout(-1);
+}
+
+vector2_t vAdd(vector2_t const a, vector2_t const b) {
+    return (vector2_t){ a.x + b.x, a.y + b.y };
+}
+
+void we_ball(gamestate_t *game, vector2_t *ball, vector2_t *dir, player_t const players[2]) {
+    // Check window top and bottom collision
+    vector2_t afterMovement = vAdd(*ball, *dir);
+    if (afterMovement.y <= 0 || afterMovement.y >= game->win.y) {
+        dir->y = -dir->y;
+    } else if (afterMovement.x <= 0 || afterMovement.x >= game->win.x) {
+        // GOAL!
+        int isPlayer = afterMovement.x <= 0 ? 1 : 0;
+        game->score[isPlayer]++;
+        
+        // Reset ball position
+        ball->x = game->win.x/2;
+        ball->y = game->win.y/2;
+        dir->x = rand() % 2 == 0 ? 1 : -1;
+        dir->y = rand() % 2 == 0 ? 1 : -1;
+    } else if (
+        (players[0].y <= ball->y && players[0].y >= ball->y && ball->x == 1) ||
+        (players[1].y <= ball->y && players[1].y >= ball->y && ball->x == game->win.x-2)
+    ) {
+        dir->x = -dir->x;
+        dir->y = -dir->y;
+    }
 }
